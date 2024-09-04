@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   backup.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/16 16:25:48 by jalombar          #+#    #+#             */
-/*   Updated: 2024/08/23 18:52:05 by jalombar         ###   ########.fr       */
+/*   Created: 2024/08/22 09:48:51 by jalombar          #+#    #+#             */
+/*   Updated: 2024/08/22 09:49:04 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../philo.h"
 
 int	ft_need_to_think(t_philo *philos, t_rules *rules)
 {
 	int				i;
 	int				id;
+	struct timeval	time;
 
 	i = 0;
 	id = philos[i].id;
+	gettimeofday(&time, NULL);
 	while (i < rules->size)
 	{
-		if (philos[i].last_think < philos[id - 1].last_think)
-			id = philos[i].id;
+		if ((time.tv_sec - philos[i].last_think.tv_sec) > (time.tv_sec
+				- philos[id].last_think.tv_sec))
+		{
+			if ((time.tv_usec - philos[i].last_think.tv_usec) > (time.tv_usec
+					- philos[id].last_think.tv_usec))
+				id = i;
+		}
 		i++;
 	}
 	return (id);
@@ -32,13 +37,20 @@ int	ft_need_to_sleep(t_philo *philos, t_rules *rules)
 {
 	int				i;
 	int				id;
+	struct timeval	time;
 
 	i = 0;
 	id = philos[i].id;
+	gettimeofday(&time, NULL);
 	while (i < rules->size)
 	{
-		if (philos[i].last_sleep < philos[id - 1].last_sleep)
-			id = philos[i].id;
+		if ((time.tv_sec - philos[i].last_sleep.tv_sec) > (time.tv_sec
+				- philos[id].last_sleep.tv_sec))
+		{
+			if ((time.tv_usec - philos[i].last_sleep.tv_usec) > (time.tv_usec
+					- philos[id].last_sleep.tv_usec))
+				id = i;
+		}
 		i++;
 	}
 	return (id);
@@ -48,40 +60,21 @@ int	ft_need_to_eat(t_philo *philos, t_rules *rules)
 {
 	int				i;
 	int				id;
+	struct timeval	time;
 
 	i = 0;
 	id = philos[i].id;
+	gettimeofday(&time, NULL);
 	while (i < rules->size)
 	{
-		if (philos[i].last_eat < philos[id - 1].last_eat)
-			id = philos[i].id;
+		if ((time.tv_sec - philos[i].last_eat.tv_sec) > (time.tv_sec
+				- philos[id].last_eat.tv_sec))
+		{
+			if ((time.tv_usec - philos[i].last_eat.tv_usec) > (time.tv_usec
+					- philos[id].last_eat.tv_usec))
+				id = i;
+		}
 		i++;
 	}
 	return (id);
-}
-
-int	ft_eating(t_vars *vars, int id)
-{
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	if (id == ft_need_to_eat(vars->philos, vars->rules))
-	{
-		printf("%li %i is eating...\n", vars->philos[id].last_eat, id);
-		vars->philos[id].last_eat = ft_convert_milli(time);
-		return (id);
-	}
-	return (0);
-}
-
-void	*ft_routine(void *pointer)
-{
-	t_philo	*philo = (t_philo *)pointer;
-	while (!ft_is_dead(philo))
-	{
-		ft_eat(philo);
-		ft_sleep(philo);
-		ft_think(philo);
-	}
-	return (0);
 }

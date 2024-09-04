@@ -6,11 +6,19 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:49:13 by jalombar          #+#    #+#             */
-/*   Updated: 2024/08/16 15:50:19 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/08/22 10:46:29 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+long	ft_convert_milli(struct timeval time)
+{
+    long milliseconds;
+
+    milliseconds = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+    return (milliseconds);
+}
 
 int	ft_atoi(char *str)
 {
