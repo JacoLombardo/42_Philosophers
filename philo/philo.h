@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:07:36 by jalombar          #+#    #+#             */
-/*   Updated: 2024/08/22 11:12:04 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/04 18:09:15 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,32 +34,32 @@ typedef struct s_philo
 	long			last_eat;
 	long			last_sleep;
 	long			last_think;
+	int				left_fork_id;
+	int				right_fork_id;
 	struct s_rules	*rules;
+	struct s_vars	*vars;
 }					t_philo;
-
-// typedef struct s_philo
-// {
-// 	int				id;
-// 	struct timeval	last_eat;
-// 	struct timeval	last_sleep;
-// 	struct timeval	last_think;
-// 	struct s_rules	*rules;
-// }					t_philo;
 
 typedef struct s_vars
 {
-	int				id;
-	int				*count;
 	struct s_philo	*philos;
-    struct s_rules	*rules;
-	pthread_mutex_t	*mutex;
+	struct s_rules	rules;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	meal;
+	pthread_mutex_t	write;
+	pthread_t		*threads;
 }					t_vars;
 
 /* routine */
-void	*ft_routine(void *vars);
+int					ft_is_dead(t_philo *philo, t_rules *rules);
+void				ft_eat(t_philo *philo, t_vars *vars);
+void				ft_sleep(t_philo *philo, t_rules *rules, t_vars *vars);
+void				ft_think(t_philo *philo, t_vars *vars);
+void				*ft_routine(void *vars);
 
 /* utils */
-long	ft_convert_milli(struct timeval time);
+void				ft_print_message(int id, int nb, t_vars *vars);
+long long			ft_convert_milli(struct timeval time);
 int					ft_atoi(char *str);
 
 #endif
