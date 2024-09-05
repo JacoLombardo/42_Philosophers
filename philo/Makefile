@@ -12,7 +12,7 @@
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
-SRCS = philo.c source/routine.c source/utils.c
+SRCS = philo.c source/routine.c source/threads.c source/utils.c
 HEADER = philo.h
 NAME = philo
 
