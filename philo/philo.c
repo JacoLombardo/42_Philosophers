@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:07:22 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/05 16:27:08 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:50:13 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ t_philo	*ft_create_philos(t_philo *philos, t_rules rules, t_vars vars)
 		else
 			philos[i].left_fork_id = rules.size;
 		philos[i].right_fork_id = i + 1;
-		/* philos[i].reps = rules.reps;
-		if (philos[i].reps)
-			philos[i].nb_reps = rules.nb_reps; */
+		philos[i].dead = 0;
+		philos[i].limit = rules.limit;
+		philos[i].meals = 0;
 		philos[i].rules = &rules;
 		philos[i].vars = &vars;
 		i++;
@@ -42,20 +42,34 @@ void	ft_monitor(t_vars *vars)
 	t_philo	*philos;
 
 	philos = vars->philos;
-	while (!vars->rules->done)
+	while (!vars->rules->dead)
 	{
 		i = 0;
 		while (i < vars->rules->size)
 		{
+			pthread_mutex_lock(&vars->meal);
 			if ((ft_get_time() - philos[i].last_eat) >= vars->rules->time_die)
 			{
+				//printf("TIME: %lli\n\n", (ft_get_time() - philos[i].last_eat));
 				ft_print_message(philos[i].id, 5, vars);
-				vars->rules->done = 1;
-				return ;
+				vars->rules->dead = 1;
 			}
+			pthread_mutex_unlock(&vars->meal);
+			i++;
 		}
-		if (ft_all_full(vars))
+		if (vars->rules->dead)
 			break ;
+		i = 0;
+		while (vars->rules->limit && i < vars->rules->size && philos[i].meals >= vars->rules->meals)
+		{
+			i++;
+		}
+		if (i == vars->rules->size)
+		{
+			vars->rules->full = 1;
+			//printf("                                                   DONE!\n");
+			break ;
+		}
 	}
 }
 
@@ -63,7 +77,7 @@ void	philo(t_rules rules)
 {
 	t_vars	vars;
 
-	rules.done = 0;
+	rules.dead = 0;
 	vars.rules = &rules;
 	if (rules.size == 1)
 	{
@@ -91,15 +105,14 @@ int	main(int argc, char **argv)
 		rules.time_die = ft_atoi(argv[2]);
 		rules.time_eat = ft_atoi(argv[3]);
 		rules.time_sleep = ft_atoi(argv[4]);
-		rules.reps = 0;
+		rules.limit = 0;
 		if (argc == 5)
 			philo(rules);
 	}
 	if (argc == 6)
 	{
-		rules.reps = 1;
-		rules.nb_reps = ft_atoi(argv[5]);
-		rules.meals = 0;
+		rules.limit = 1;
+		rules.meals = ft_atoi(argv[5]);
 		philo(rules);
 	}
 	else if (argc < 5)

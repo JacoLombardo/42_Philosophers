@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:07:36 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/05 16:03:21 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:50:48 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,16 @@ typedef struct s_rules
 	int				time_die;
 	int				time_eat;
 	int				time_sleep;
-	int				reps;
-	int				nb_reps;
+	int				dead;
+	int				limit;
 	int				meals;
-	int				done;
+	int				full;
+	struct s_philo	philos[200];
+	struct s_rules	*rules;
+	pthread_mutex_t	forks[200];
+	pthread_mutex_t	meal;
+	pthread_mutex_t	write;
+	pthread_t		threads[200];
 }					t_rules;
 
 typedef struct s_philo
@@ -38,8 +44,10 @@ typedef struct s_philo
 	long			last_eat;
 	int				left_fork_id;
 	int				right_fork_id;
-	/* int				reps;
-	int				nb_reps; */
+	int				dead;
+	int				limit;
+	int				meals;
+	int				full;
 	struct s_rules	*rules;
 	struct s_vars	*vars;
 }					t_philo;
