@@ -6,91 +6,86 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:07:22 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/09 17:50:13 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:38:32 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo	*ft_create_philos(t_philo *philos, t_rules rules, t_vars vars)
+t_philo	*ft_create_philos(t_philo *philos, t_rules *rules)
 {
 	int	i;
 
 	i = 0;
-	while (i < rules.size)
+	while (i < rules->size)
 	{
 		philos[i].id = i + 1;
 		philos[i].last_eat = ft_get_time();
 		if (i)
 			philos[i].left_fork_id = i;
 		else
-			philos[i].left_fork_id = rules.size;
+			philos[i].left_fork_id = rules->size;
 		philos[i].right_fork_id = i + 1;
 		philos[i].dead = 0;
-		philos[i].limit = rules.limit;
+		philos[i].limit = rules->limit;
 		philos[i].meals = 0;
-		philos[i].rules = &rules;
-		philos[i].vars = &vars;
+		philos[i].rules = rules;
 		i++;
 	}
 	return (philos);
 }
 
-void	ft_monitor(t_vars *vars)
+void	ft_monitor(t_rules *rules)
 {
 	int		i;
 	t_philo	*philos;
 
-	philos = vars->philos;
-	while (!vars->rules->dead)
+	philos = rules->philos;
+	while (!rules->dead && !rules->full)
 	{
 		i = 0;
-		while (i < vars->rules->size)
+		while (i < rules->size)
 		{
-			pthread_mutex_lock(&vars->meal);
-			if ((ft_get_time() - philos[i].last_eat) >= vars->rules->time_die)
+			pthread_mutex_lock(&rules->meal);
+			if ((ft_get_time() - philos[i].last_eat) >= rules->time_die)
 			{
 				//printf("TIME: %lli\n\n", (ft_get_time() - philos[i].last_eat));
-				ft_print_message(philos[i].id, 5, vars);
-				vars->rules->dead = 1;
+				ft_print_message(philos[i].id, 5, rules);
+				rules->dead = 1;
 			}
-			pthread_mutex_unlock(&vars->meal);
+			pthread_mutex_unlock(&rules->meal);
 			i++;
 		}
-		if (vars->rules->dead)
+		if (rules->dead)
 			break ;
-		i = 0;
-		while (vars->rules->limit && i < vars->rules->size && philos[i].meals >= vars->rules->meals)
-		{
-			i++;
-		}
-		if (i == vars->rules->size)
-		{
-			vars->rules->full = 1;
-			//printf("                                                   DONE!\n");
-			break ;
-		}
+		// i = 0;
+		// while (rules->limit && i < rules->size && philos[i].meals >= rules->meals)
+		// 	i++;
+		// if (i == rules->size)
+		// {
+		// 	rules->full = 1;
+		// 	printf("                                                   DONE!\n");
+		// 	break ;
+		// }
 	}
 }
 
 void	philo(t_rules rules)
 {
-	t_vars	vars;
-
 	rules.dead = 0;
-	vars.rules = &rules;
+	rules.full = 0;
 	if (rules.size == 1)
 	{
 		printf("%i %i died\n", 0, 1);
 		return ;
 	}
-	if (ft_mutexes_init(&vars))
+	if (ft_mutexes_init(&rules))
 		return ;
-	ft_create_philos(vars.philos, rules, vars);
-	if (ft_threads_init(&vars))
+	ft_create_philos(rules.philos, &rules);
+	if (ft_threads_init(&rules))
 		return ;
-	ft_monitor(&vars);
-	ft_threads_n_mutex_close(&vars);
+	//ft_monitor(&rules);
+	ft_threads_n_mutex_close(&rules);
 	//printf("Fine\n");
 }
 

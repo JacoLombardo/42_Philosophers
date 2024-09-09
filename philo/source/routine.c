@@ -6,78 +6,54 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 16:25:48 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/09 17:46:55 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:47:56 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-// int	ft_all_full(t_vars *vars)
-// {
-// 	if (vars->rules->reps)
-// 	{
-// 		if (vars->rules->meals >= (vars->rules->nb_reps * vars->rules->size))
-// 		{
-// 			vars->rules->done = 1;
-// 			return (1);
-// 		}
-// 		else
-// 			return (0);
-// 	}
-// 	return (0);
-// }
-
-// int	ft_is_dead(t_philo *philo, t_rules *rules)
-// {
-// 	if ((ft_get_time() - philo->last_eat) >= rules->time_die)
-// 	{
-// 		ft_print_message(philo->id, 5, philo->vars);
-// 		rules->done = 1;
-// 		return (1);
-// 	}
-// 	else
-// 		return (0);
-// }
-
-void	ft_eat(t_philo *philo, t_vars *vars)
+void	ft_eat(t_philo *philo, t_rules *rules)
 {
-	pthread_mutex_lock(&vars->forks[philo->left_fork_id]);
-	ft_print_message(philo->id, 1, vars);
-	pthread_mutex_lock(&vars->forks[philo->right_fork_id]);
-	ft_print_message(philo->id, 1, vars);
-	pthread_mutex_lock(&vars->meal);
-	ft_print_message(philo->id, 2, vars);
+	pthread_mutex_lock(&rules->forks[philo->left_fork_id]);
+	ft_print_message(philo->id, 1, rules);
+	pthread_mutex_lock(&rules->forks[philo->right_fork_id]);
+	ft_print_message(philo->id, 1, rules);
+	pthread_mutex_lock(&rules->meal);
+	ft_print_message(philo->id, 2, rules);
 	philo->last_eat = ft_get_time();
-	pthread_mutex_unlock(&vars->meal);
-	usleep(vars->rules->time_eat * 1000);
+	pthread_mutex_unlock(&rules->meal);
+	usleep(rules->time_eat * 1000);
 	philo->meals++;
-	if (vars->rules->limit && philo->meals == vars->rules->meals)
+	if (rules->limit && philo->meals == rules->meals)
 		philo->full = 1;
-	pthread_mutex_unlock(&vars->forks[philo->left_fork_id]);
-	pthread_mutex_unlock(&vars->forks[philo->right_fork_id]);
+	pthread_mutex_unlock(&rules->forks[philo->left_fork_id]);
+	pthread_mutex_unlock(&rules->forks[philo->right_fork_id]);
 }
 
 void	*ft_routine(void *pointer)
 {
 	t_philo	*philo;
 	t_rules	*rules;
-	t_vars	*vars;
 
 	philo = (t_philo *)pointer;
 	rules = philo->rules;
-	vars = philo->vars;
 	if (philo->id % 2)
 		usleep(100);
-	//printf("Inside philo %i\n", philo->id);
-	while (!rules->dead || !rules->full)
+	while (!rules->dead && !rules->full)
 	{
-		//printf("                                   %i\n", rules->full);
-		ft_eat(philo, vars);
-		if (rules->full)
+		//printf("TIME: %lli\n\n", (ft_get_time() -  philo->last_eat));
+		if ((ft_get_time() - philo->last_eat) >= rules->time_die)
 			break ;
-		ft_print_message(philo->id, 3, vars);
+		ft_eat(philo, rules);
+		if (rules->full || rules->dead)
+			break ;
+		ft_print_message(philo->id, 3, rules);
 		usleep(rules->time_sleep * 1000);
-		ft_print_message(philo->id, 4, vars);
+		if (rules->full || rules->dead)
+			break ;
+		ft_print_message(philo->id, 4, rules);
+		if (rules->full || rules->dead)
+			break ;
 	}
 	return (NULL);
 }

@@ -6,18 +6,18 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:49:13 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/09 11:19:44 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:31:54 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void	ft_print_message(int id, int nb, t_vars *vars)
+void	ft_print_message(int id, int nb, t_rules *rules)
 {
 	long long	start;
 
-	start = vars->rules->start;
-	pthread_mutex_lock(&vars->write);
+	start = rules->start;
+	pthread_mutex_lock(&rules->write);
 	if (nb == 1)
 		printf("%lli %i has taken a fork\n", ft_get_time() - start, id);
 	else if (nb == 2)
@@ -27,8 +27,8 @@ void	ft_print_message(int id, int nb, t_vars *vars)
 	else if (nb == 4)
 		printf("%lli %i is thinking\n", ft_get_time() - start, id);
 	else if (nb == 5)
-		printf("-- %lli %i died\n", ft_get_time() - start, id);
-	pthread_mutex_unlock(&vars->write);
+		printf("%lli %i died\n", ft_get_time() - start, id);
+	pthread_mutex_unlock(&rules->write);
 }
 
 long long	ft_get_time(void)
