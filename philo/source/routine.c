@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 16:25:48 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/10 16:35:06 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:51:20 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_all_full(t_rules *rules, t_philo *philos)
 	int	i;
 
 	i = 0;
-	while (rules->limit && i < rules->size && philos[i].full)
+	while (i < rules->size && philos[i].full)
 		i++;
 	if (i == rules->size)
 	{
