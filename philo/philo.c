@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:07:22 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/10 16:33:07 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:53:43 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,31 +92,3 @@ int	main(int argc, char **argv)
 		ft_print_error(3);
 	return (0);
 }
-
-/* int	main(int argc, char **argv)
-{
-	t_rules	rules;
-
-	if (argc == 5 || argc == 6)
-	{
-		rules.start = ft_get_time();
-		rules.size = ft_atoi(argv[1]);
-		rules.time_die = ft_atoi(argv[2]);
-		rules.time_eat = ft_atoi(argv[3]);
-		rules.time_sleep = ft_atoi(argv[4]);
-		rules.limit = 0;
-		if (argc == 5)
-			philo(rules);
-	}
-	if (argc == 6)
-	{
-		rules.limit = 1;
-		rules.meals = ft_atoi(argv[5]);
-		philo(rules);
-	}
-	else if (argc < 5)
-		write(2, "ERROR: too few parameters\n", 27);
-	else if (argc > 6)
-		write(2, "ERROR: Too many parameters\n", 28);
-	return (0);
-} */
