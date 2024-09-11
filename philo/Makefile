@@ -11,8 +11,8 @@
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g
-SRCS = philo.c source/routine.c source/threads.c source/utils.c
+CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=thread
+SRCS = philo.c source/routine_utils.c source/routine.c source/threads.c source/utils.c
 HEADER = philo.h
 NAME = philo
 

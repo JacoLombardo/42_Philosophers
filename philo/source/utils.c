@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:49:13 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/10 16:29:24 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:44:21 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	ft_print_message(int id, int nb, t_rules *rules)
 	long long	start;
 
 	start = rules->start;
-	pthread_mutex_lock(&rules->write);
+	pthread_mutex_lock(&rules->write_m);
+	pthread_mutex_lock(&rules->dead_m);
 	if (nb == 1 && !rules->dead)
 		printf("%lli %i has taken a fork\n", ft_get_time() - start, id);
 	else if (nb == 2 && !rules->dead)
@@ -44,7 +45,8 @@ void	ft_print_message(int id, int nb, t_rules *rules)
 		printf("%lli %i is thinking\n", ft_get_time() - start, id);
 	else if (nb == 5 && !rules->dead)
 		printf("%lli %i died\n", ft_get_time() - start, id);
-	pthread_mutex_unlock(&rules->write);
+	pthread_mutex_unlock(&rules->dead_m);
+	pthread_mutex_unlock(&rules->write_m);
 }
 
 void	ft_usleep(long long milliseconds)

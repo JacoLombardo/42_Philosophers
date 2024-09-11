@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:07:36 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/10 16:31:50 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:24:06 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ typedef struct s_philo
 {
 	int				id;
 	long			last_eat;
-	int				left_fork_id;
-	int				right_fork_id;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
 	int				dead;
 	int				limit;
 	int				meals;
@@ -45,15 +45,20 @@ typedef struct s_rules
 	int				full;
 	struct s_philo	philos[200];
 	pthread_mutex_t	forks[200];
-	pthread_mutex_t	meal;
-	pthread_mutex_t	write;
+	pthread_mutex_t	meal_m;
+	pthread_mutex_t	write_m;
+	pthread_mutex_t	dead_m;
+	pthread_mutex_t	full_m;
 	pthread_t		threads[200];
 	pthread_t		monitor;
 }					t_rules;
 
-/* routine */
+/* routine_utils */
 int					ft_is_dead(t_rules *rules, t_philo *philos);
 int					ft_all_full(t_rules *rules, t_philo *philos);
+int					ft_dead_get(t_rules *rules);
+
+/* routine */
 void				ft_eat(t_philo *philo, t_rules *rules);
 void				*ft_monitor(void *pointer);
 void				*ft_routine(void *pointer);

@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:07:22 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/10 16:53:43 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:19:43 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,19 @@
 t_philo	*ft_create_philos(t_philo *philos, t_rules *rules)
 {
 	int	i;
+	int	temp;
 
 	i = 0;
+	temp = 0;
 	while (i < rules->size)
 	{
 		philos[i].id = i + 1;
 		philos[i].last_eat = ft_get_time();
-		if (i - 1 >= 0)
-			philos[i].left_fork_id = i - 1;
+		philos[i].left_fork = &rules->forks[i];
+		if (i + 1 < rules->size)
+			philos[i].right_fork = &rules->forks[i + 1];
 		else
-			philos[i].left_fork_id = rules->size - 1;
-		philos[i].right_fork_id = i;
+			philos[i].right_fork = &rules->forks[0];
 		philos[i].dead = 0;
 		philos[i].limit = rules->limit;
 		philos[i].meals = 0;

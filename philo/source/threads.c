@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:56:21 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/10 16:30:30 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:18:16 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,10 @@ void	ft_mutexes_close(t_rules *rules)
 		pthread_mutex_destroy(&rules->forks[i]);
 		i++;
 	}
-	pthread_mutex_destroy(&rules->meal);
-	pthread_mutex_destroy(&rules->write);
+	pthread_mutex_destroy(&rules->meal_m);
+	pthread_mutex_destroy(&rules->write_m);
+	pthread_mutex_destroy(&rules->dead_m);
+	pthread_mutex_destroy(&rules->full_m);
 }
 
 int	ft_threads_close(t_rules *rules)
@@ -69,9 +71,13 @@ int	ft_mutexes_init(t_rules *rules)
 			return (1);
 		i++;
 	}
-	if (pthread_mutex_init(&rules->meal, NULL))
+	if (pthread_mutex_init(&rules->meal_m, NULL))
 		return (1);
-	if (pthread_mutex_init(&rules->write, NULL))
+	if (pthread_mutex_init(&rules->write_m, NULL))
+		return (1);
+	if (pthread_mutex_init(&rules->dead_m, NULL))
+		return (1);
+	if (pthread_mutex_init(&rules->full_m, NULL))
 		return (1);
 	return (0);
 }
