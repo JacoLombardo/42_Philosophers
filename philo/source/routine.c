@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 16:25:48 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/11 17:21:47 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:34:50 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,6 @@ void	*ft_routine(void *pointer)
 
 	philo = (t_philo *)pointer;
 	rules = philo->rules;
-	if (philo->id % 2)
-		ft_usleep(1);
 	while (!ft_dead_get(rules))
 	{
 		ft_eat(philo, rules);
