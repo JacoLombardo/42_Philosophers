@@ -6,7 +6,7 @@
 /*   By: jalombar <jalombar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 15:07:22 by jalombar          #+#    #+#             */
-/*   Updated: 2024/09/11 17:19:43 by jalombar         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:10:41 by jalombar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 t_philo	*ft_create_philos(t_philo *philos, t_rules *rules)
 {
 	int	i;
-	int	temp;
 
 	i = 0;
-	temp = 0;
 	while (i < rules->size)
 	{
 		philos[i].id = i + 1;
